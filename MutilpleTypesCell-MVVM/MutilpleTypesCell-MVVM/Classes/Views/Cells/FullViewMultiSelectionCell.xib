@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FullViewMultiSelectionCell" rowHeight="125" id="578-fB-acA" customClass="FullViewMultiSelectionCell" customModule="MutilpleTypesCell_MVVM" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="125"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="578-fB-acA" id="l1V-GC-gyW">
+                <rect key="frame" x="0.0" y="0.0" width="600" height="125"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lJ4-yg-Izi" customClass="CommonView" customModule="MutilpleTypesCell_MVVM" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="124"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7a-oh-4h8" customClass="TitleText" customModule="MutilpleTypesCell_MVVM" customModuleProvider="target">
+                                <rect key="frame" x="56" y="53" width="38" height="17"/>
+                                <color key="backgroundColor" red="0.30092616109999998" green="1" blue="0.12357733360000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.23923206329345703" green="0.23922491073608398" blue="0.23922893404960632" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4v-Zw-fry" customClass="TitleText" customModule="MutilpleTypesCell_MVVM" customModuleProvider="target">
+                                <rect key="frame" x="551" y="53" width="33" height="17"/>
+                                <color key="backgroundColor" red="0.30092616109999998" green="1" blue="0.12357733360000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.23923206329345703" green="0.23922491073608398" blue="0.23922893404960632" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tvk-hZ-fp2" customClass="Checkbox" customModule="MutilpleTypesCell_MVVM" customModuleProvider="target">
+                                <rect key="frame" x="8" y="44" width="40" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="2AF-ur-GBN"/>
+                                    <constraint firstAttribute="width" constant="40" id="UnB-t1-OIS"/>
+                                </constraints>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="a7a-oh-4h8" firstAttribute="leading" secondItem="Tvk-hZ-fp2" secondAttribute="trailing" constant="8" id="1tk-OI-pI0"/>
+                            <constraint firstItem="Tvk-hZ-fp2" firstAttribute="leading" secondItem="lJ4-yg-Izi" secondAttribute="leading" constant="8" id="672-z3-dcY"/>
+                            <constraint firstAttribute="centerY" secondItem="Tvk-hZ-fp2" secondAttribute="centerY" id="7JU-mD-Q9d"/>
+                            <constraint firstAttribute="centerY" secondItem="a7a-oh-4h8" secondAttribute="centerY" id="I8b-fs-pXU"/>
+                            <constraint firstAttribute="height" constant="64" id="Sdt-87-7hU"/>
+                            <constraint firstAttribute="trailing" secondItem="Q4v-Zw-fry" secondAttribute="trailing" constant="16" id="bb0-3E-6ZH"/>
+                            <constraint firstAttribute="centerY" secondItem="Q4v-Zw-fry" secondAttribute="centerY" id="qMP-Zm-h4v"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Sdt-87-7hU"/>
+                            </mask>
+                        </variation>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="lJ4-yg-Izi" firstAttribute="leading" secondItem="l1V-GC-gyW" secondAttribute="leading" id="PEo-fw-c78"/>
+                    <constraint firstItem="lJ4-yg-Izi" firstAttribute="top" secondItem="l1V-GC-gyW" secondAttribute="top" id="WU1-Dm-QhE"/>
+                    <constraint firstAttribute="trailing" secondItem="lJ4-yg-Izi" secondAttribute="trailing" id="pLF-Ao-jFr"/>
+                    <constraint firstAttribute="bottom" secondItem="lJ4-yg-Izi" secondAttribute="bottom" id="xAa-fa-tD3"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="modifierName" destination="a7a-oh-4h8" id="zg2-lP-qjz"/>
+                <outlet property="price" destination="Q4v-Zw-fry" id="Uf9-HK-vv8"/>
+                <outlet property="selectedOption" destination="Tvk-hZ-fp2" id="yqR-UE-89q"/>
+            </connections>
+            <point key="canvasLocation" x="83" y="39"/>
+        </tableViewCell>
+    </objects>
+</document>
