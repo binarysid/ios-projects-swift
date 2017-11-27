@@ -49,6 +49,7 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
         self.modifierSingleItemDelegate = delegate
     }
     
+    // multiple cell selection delegate method
     func didSelectCellItem(_ state: Bool,modifierItem: ModifierItem, option: ModifierOption, type:String) {
         
         if self.option != nil{
@@ -57,7 +58,7 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
         }
     }
     
-    
+    // single cell selection delegate method
     func didSelectSingleCellItem(_ state: Bool, modifierItem: ModifierItem, option: ModifierOption, type: String) {
 
         if self.option != nil{

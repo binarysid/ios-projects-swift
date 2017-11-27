@@ -103,11 +103,13 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
         //
     }
     
+    // fetching modifier from json data
     fileprivate func fetchModifierList(){
         
         self.viewModel!.loadModifierList()
     }
     
+    // user action updates the modifier object & return totalPrice
     private func getTotalPriceFromUpdatedModifier(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption, type:String,isSingleSelection:Bool)->Double{
         
         guard let modelView = self.viewModel else{
@@ -121,12 +123,14 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
         return priceSum
     }
     
+    // multi selection from component view
     func optionSelected(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption, type:String,isSingleSelection:Bool){ // for component view options
         
         self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:isSingleSelection)
 
     }
     
+    // single selection component view
     func singleOptionSelected(_ state: Bool, modifierItem: ModifierItem, option: ModifierOption, type: String, isSingleSelection: Bool) { // component view page radio option item selection checker
         
         self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:isSingleSelection)
@@ -160,13 +164,13 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
         
     }
     
-    // multi selection
+    // multi selection from current viewcontroller
     @objc func itemSelected(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption, type:String){
         
         self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:false)
 
     }
-    
+    // single selection current viewcontroller
     func singleItemSelected(_ state: Bool, modifierItem: ModifierItem, option: ModifierOption, type: String) {
         
         self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:true)
@@ -189,6 +193,7 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
         //self.hideLoadingHUD()
     }
     
+    // update total price, item count
     func refreshData(_ price:Double, quantity:Int,modifiers: Array<Modifier>,showPageTitle:Bool) {
         
         self.modifierFixedPrice = price
@@ -200,6 +205,7 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
         })
     }
     
+    // update total price, item count from local database
     func refreshDataFromLocalDB(_ price: Double, itemTotal: Double, quantity: Int, modifiers: Array<Modifier>) {
         
         self.modifierFixedPrice = price
@@ -209,6 +215,7 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
             self.tableView?.reloadData()
         })
     }
+    
     @IBAction func onItemPlus(_ sender: UIButton) {
         
         self.itemCount += 1
