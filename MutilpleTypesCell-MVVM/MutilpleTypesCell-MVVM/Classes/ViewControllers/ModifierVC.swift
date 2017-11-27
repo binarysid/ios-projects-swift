@@ -18,7 +18,6 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
     @IBOutlet weak var countLabel: UIButton!
     @IBOutlet weak var specialNotes: UITextView!
     
-    var modifiers: Array<Modifier> = []
     var productItem: Array<Product>?
     var modifierFullName:String = ""
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -109,16 +108,29 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
         self.viewModel!.loadModifierList()
     }
     
+    private func getTotalPriceFromUpdatedModifier(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption, type:String,isSingleSelection:Bool)->Double{
+        
+        guard let modelView = self.viewModel else{
+            return self.totalPrice
+        }
+        guard let priceSum = modelView.editModifiers(state,modifierItem:modifierItem,option: option,isSingleSelection:isSingleSelection) else{
+            return self.totalPrice
+        }
+        self.updateTableView()
+        
+        return priceSum
+    }
+    
     func optionSelected(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption, type:String,isSingleSelection:Bool){ // for component view options
         
-        self.editModifiers(state,modifierItem:modifierItem,option: option,isSingleSelection:isSingleSelection)
-        self.updateModifierObject()
+        self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:isSingleSelection)
+
     }
     
     func singleOptionSelected(_ state: Bool, modifierItem: ModifierItem, option: ModifierOption, type: String, isSingleSelection: Bool) { // component view page radio option item selection checker
         
-        self.editModifiers(state,modifierItem:modifierItem,option: option,isSingleSelection:isSingleSelection)
-        self.updateModifierObject()
+        self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:isSingleSelection)
+        
     }
     
     // component view selector
@@ -151,56 +163,23 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
     // multi selection
     @objc func itemSelected(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption, type:String){
         
-        self.editModifiers(state,modifierItem:modifierItem,option: option,isSingleSelection:false)
-        self.updateModifierObject()
+        self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:false)
+
     }
     
     func singleItemSelected(_ state: Bool, modifierItem: ModifierItem, option: ModifierOption, type: String) {
         
-        self.editModifiers(state,modifierItem:modifierItem,option: option,isSingleSelection:true)
-        self.updateModifierObject()
+        self.totalPrice = getTotalPriceFromUpdatedModifier(state,modifierItem:modifierItem,option: option, type: type,isSingleSelection:true)
+
     }
     
-     // update viewmodel object
-    fileprivate func updateModifierObject(){
+    fileprivate func updateTableView(){
         
-        if let modelView = self.viewModel{
-            modelView.updateModifier(self.modifiers)
-        }
         DispatchQueue.main.async(execute: {
             self.tableView?.reloadData()
         })
     }
     
-    // add all selected modifiers to the product list
-    fileprivate func addAllModifiers(){
-        
-        if self.isAnyItemSelected(){
-            self.modifierFullName = ""
-
-            
-            for (index,modifier) in self.modifiers.enumerated(){
-                
-
-                
-                for (_, option) in self.modifiers[index].option!.enumerated()  {
-                 
-
-                    if option.selected! {
-                        self.modifierFullName = self.modifierFullName.isEmpty ? option.optionName! : (self.modifierFullName + " , " + option.optionName!)
-                    }
-                    
-                }
-            
-            }
-    
-            self.modifierDelegate?.modifyProduct(self.modifierFixedPrice, productID: self.productID ?? "", itemCount: self.itemCount, name: self.productName!, notes: self.specialNotes.text ?? "",productItem: self.getUpdatedProductItemByID(self.productID!, productItem: self.productItem!, quantity: self.itemCount, price: self.modifierFixedPrice, modifierFullName: self.modifierFullName,itemTotal:self.modifierTotalPrice) , modifierFullName:self.modifierFullName,itemTotal:self.modifierTotalPrice)
-        }
-
-            //self.navigationController?.popViewControllerAnimated(false)
-        
-        //
-    }
     
     func showLoader() {
         //self.showLoadingHUD()
@@ -212,7 +191,6 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
     
     func refreshData(_ price:Double, quantity:Int,modifiers: Array<Modifier>,showPageTitle:Bool) {
         
-        self.modifiers = modifiers
         self.modifierFixedPrice = price
         self.totalPrice = price
         self.itemCount = quantity
@@ -224,7 +202,6 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
     
     func refreshDataFromLocalDB(_ price: Double, itemTotal: Double, quantity: Int, modifiers: Array<Modifier>) {
         
-        self.modifiers = modifiers
         self.modifierFixedPrice = price
         self.itemCount = quantity
         self.modifierTotalPrice = itemTotal
@@ -240,8 +217,11 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
 
     @IBAction func onAddItems(_ sender: UIButton) {
         
-        self.addAllModifiers()
-        
+        //self.addAllModifiers()
+        guard let modelView = self.viewModel else{
+            return
+        }
+        self.modifierFullName = modelView.addAllModifiers(modifierName: self.modifierFullName)
     }
     
     @IBAction func onItemMinus(_ sender: UIButton) {
@@ -313,148 +293,4 @@ class ModifierVC: UIViewController, ModifierPresenterDelegate,ModifierItemDelega
 
 }
 
-extension ModifierVC{
-    
-    // update the changed state(selected/unselected) of modifier object
-    fileprivate func editModifiers(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption,isSingleSelection:Bool){
-        
-        if self.modifiers.count>0{
-            if self.updateItemByID(option, mID: modifierItem.modifierID!, isSelected: state, isSingleSelection:isSingleSelection){
-                self.totalPrice =  self.calculateTotalPrice()
-            }
-            
-        }
-        
-    }
-    
-    // all selected items price calculator
-    func calculateTotalPrice()->Double{
-        
-        var total = 0.0
-        for (_, item) in self.modifiers.enumerated(){
-            for(_, option) in item.option!.enumerated(){
-                if option.selected!{
-                    total = total + option.cost!
-                }
-            }
-        }
-        return total
-    }
-    
-    func findModifierByID(_ modifier:Array<Modifier>, mID:Double)->(index:Int, options: Array<ModifierOption>)?{
-        
-        var modifierOption: Array<ModifierOption>? = []
-        
-        for (index, item) in modifier.enumerated(){
-            if item.modifierItem?.modifierID == mID{
-                
-                for(_, option) in item.option!.enumerated(){
-                    modifierOption?.append(option)
-                }
-                return (index,modifierOption!)
-            }
-        }
-        return nil
-    }
-    
-    func findOptionByID(_ option:Array<ModifierOption>, oID:Double)->(index:Int, status:Bool){
-        
-        for (index, item) in option.enumerated(){
-            if item.modifierOptionID == oID{
-                return (index, true)
-            }
-        }
-        return (-1, false)
-    }
-    
-    func updateItemByID(_ option: ModifierOption, mID:Double, isSelected:Bool, isSingleSelection:Bool)->Bool{
-        
-        if let optionItems = self.findModifierByID(self.modifiers, mID:mID){ // if modifier item exists
-            
-            let optionFinder = self.findOptionByID(optionItems.options, oID: option.modifierOptionID!)
-            if let modifyOption = self.modifiers[optionItems.index].option{
-                
-                modifyOption[optionFinder.index].selected = isSelected
-                
-                if isSingleSelection{
-                    for (optIndex, opt) in modifyOption.enumerated(){
-                        if optIndex != optionFinder.index{
-                            opt.selected = false
-                        }
-                    }
-                }
-                return true
-            }
-            
-        }
-        return false
-    }
-    
-    //item with modifiers is added to product list & return the new product object
-    func getUpdatedProductItemByID(_ id:String,productItem: Array<Product>, quantity:Int, price:Double, modifierFullName:String,itemTotal:Double)->Array<Product>{
-        
-        let prodArr = productItem
-        for product in prodArr{
-            
-            if product.ProductID==id{
-                product.ItemCount = quantity
-                product.Price = price
-                product.ItemTotalPrice = itemTotal
-                product.modifierFullName = modifierFullName
-            }
-        }
-        return prodArr
-    }
-    
-    
-    fileprivate func isAnyItemSelected()->Bool{
-        
-        for (index,_) in self.modifiers.enumerated(){
-            for (_, option) in self.modifiers[index].option!.enumerated()   {
-                if option.selected!{
-                    return option.selected!
-                }
-            }
-        }
-        return false
-    }
 
-    func addItemByID(_ modifier:Array<Modifier>, option: ModifierOption, mID:Double, isSelected:Bool)->Bool{
-        
-        if let optionItems = self.findModifierByID(modifier, mID:mID){ // if modifier item exists
-            let optionFinder = self.findOptionByID(optionItems.options, oID: option.modifierOptionID!)
-            
-            modifier[optionItems.index].option?.append(option)
-            
-            return true
-            
-        }
-        return false
-    }
-    
-    func removeItemByID(_ modifier:Array<Modifier>, option: ModifierOption, mID:Double)->(modifierItemIndex:Int,status:Bool){
-        
-        if let optionItems = self.findModifierByID(modifier, mID:mID){ // if modifier item exists
-            let optionFinder = self.findOptionByID(optionItems.options, oID: option.modifierOptionID!)
-            if optionFinder.status{ // if modifier option added already
-                
-                modifier[optionItems.index].option?.remove(at: optionFinder.index)
-                
-                return (optionItems.index,status:true)
-            }
-        }
-        return (-1,status:false)
-    }
-    
-    func emptyModifierByID(_ mID:Double){
-        
-        for (_, item) in self.modifiers.enumerated(){
-            if item.modifierItem?.modifierID == mID{
-                for(optionIndex, option) in item.option!.enumerated(){
-                    item.option?.remove(at: optionIndex)
-                }
-            }
-        }
-    }
-
-}

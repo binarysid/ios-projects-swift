@@ -59,31 +59,6 @@
                                              ]
                           },
                           {
-                          "modifiername": "Select option",
-                          "selectiontype": "s1",
-                          "selectiontype_name": "Single Selection",
-                          "viewtype": "v2",
-                          "viewtype_name": "Full view",
-                          "titleshow": true,
-                          "modifier_id": 1510559405766,
-                          "modifieroption": [
-                                             {
-                                             "modifieroptionid": 1510559421376,
-                                             "name": "No salad",
-                                             "nocost": true,
-                                             "price": 0,
-                                             "selected": false
-                                             },
-                                             {
-                                             "modifieroptionid": 1510559426192,
-                                             "name": "Salad",
-                                             "nocost": true,
-                                             "price": 0,
-                                             "selected": false
-                                             }
-                                             ]
-                          },
-                          {
                           "modifiername": "Sauce",
                           "selectiontype": "s1",
                           "selectiontype_name": "Single Selection",
@@ -167,7 +142,33 @@
                                              "selected": false
                                              }
                                              ]
-                          }
+                          },
+                          {
+                          "modifiername": "Select option",
+                          "selectiontype": "s1",
+                          "selectiontype_name": "Single Selection",
+                          "viewtype": "v2",
+                          "viewtype_name": "Full view",
+                          "titleshow": true,
+                          "modifier_id": 1510559405766,
+                          "modifieroption": [
+                                             {
+                                             "modifieroptionid": 1510559421376,
+                                             "name": "No salad",
+                                             "nocost": true,
+                                             "price": 0,
+                                             "selected": false
+                                             },
+                                             {
+                                             "modifieroptionid": 1510559426192,
+                                             "name": "Salad",
+                                             "nocost": true,
+                                             "price": 0,
+                                             "selected": false
+                                             }
+                                             ]
+                          },
+
                           ],
             "default_quantity": 1,
             "default_price": 4.5

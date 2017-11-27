@@ -50,7 +50,8 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
     }
     
     func didSelectCellItem(_ state: Bool,modifierItem: ModifierItem, option: ModifierOption, type:String) {
-        if let modifierOption = self.option{
+        
+        if self.option != nil{
             option.selected = state
             self.modifierDelegate!.optionSelected(state, modifierItem:modifierItem, option: option, type:type,isSingleSelection:false)
         }
@@ -58,7 +59,8 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
     
     
     func didSelectSingleCellItem(_ state: Bool, modifierItem: ModifierItem, option: ModifierOption, type: String) {
-        if let modifierOption = self.option{
+
+        if self.option != nil{
             option.selected = state
             self.modifierSingleItemDelegate?.singleOptionSelected(state, modifierItem: modifierItem, option: option, type: type, isSingleSelection: true)
             
@@ -72,7 +74,7 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
             switch viewSelectionType{
                 
         case .ComponentViewSingleSelectionType:
-        var cell : FullViewSingleSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewSingleSelectionCell.identifier, for: indexPath) as! FullViewSingleSelectionCell
+        let cell : FullViewSingleSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewSingleSelectionCell.identifier, for: indexPath) as! FullViewSingleSelectionCell
         cell.selectedOption.isSelected = !cell.selectedOption.isSelected
 
         if let modifierOption = self.option{
@@ -82,7 +84,7 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
         }
          
         case .ComponentViewMultiSelectionType:
-        var cell : FullViewMultiSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
+        let cell : FullViewMultiSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
         cell.selectedOption.modifierItem = modifierItem
         
         cell.selectedOption.viewType = self.viewType!.rawValue
@@ -120,7 +122,7 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
         if let viewSelectionType = self.viewType{
             switch viewSelectionType{
             case .ComponentViewMultiSelectionType:
-            var cell : FullViewMultiSelectionCell = self.tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
+            let cell : FullViewMultiSelectionCell = self.tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
             cell.selectionStyle = UITableViewCellSelectionStyle.none
             
             if let modifierOption = self.option{
@@ -144,7 +146,7 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
             return cell
                 
             case .ComponentViewSingleSelectionType:
-                var cell : FullViewSingleSelectionCell = self.tableView.dequeueReusableCell(withIdentifier: FullViewSingleSelectionCell.identifier, for: indexPath) as! FullViewSingleSelectionCell
+                let cell : FullViewSingleSelectionCell = self.tableView.dequeueReusableCell(withIdentifier: FullViewSingleSelectionCell.identifier, for: indexPath) as! FullViewSingleSelectionCell
                 cell.selectionStyle = UITableViewCellSelectionStyle.none
                 if let modifierOption = self.option{
                     
@@ -164,7 +166,7 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
                     self.radioOptions.append(cell.selectedOption)
                     if indexPath.row == modifierOption.count-1{
                         
-                        for (index,radioOption) in self.radioOptions.enumerated(){
+                        for (_,radioOption) in self.radioOptions.enumerated(){
                             radioOption.alternateButton = self.radioOptions.filter{ $0 != radioOption}
                         }
                         

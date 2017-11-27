@@ -78,6 +78,7 @@ class ModifierViewModel : NSObject{
         }
         
         let localFileUrl = URL.init(fileURLWithPath: jsonPath)
+        
         // load data from json file
         let request = Alamofire.request(localFileUrl).responseObject { (response: DataResponse<ModifierListDataMapper>) in
             
@@ -85,48 +86,42 @@ class ModifierViewModel : NSObject{
                 print(error)
             }
             else{
+                guard let modifierListValue = response.result.value,
+                    let modifierList = modifierListValue.ModifierBasicDataMapper,
+                    let modifierData = modifierList.ModifierInfoDataMapper,
+                    let groupData = modifierData.ModifierGroupInfoDataMapper
+                    else{
+                    return
+                }
                 
-                if let modifierListValue = response.result.value {
-                    if let modifierList = modifierListValue.ModifierBasicDataMapper{
-                        if let modifierData = modifierList.ModifierInfoDataMapper{
-                            
-                            if let groupData = modifierData.ModifierGroupInfoDataMapper{
-                                //print("object")
-                                if groupData.count>0{
-                                    
-                                    
-                                    for (_,data) in groupData.enumerated(){ //
-                                        var modifierOption: Array<ModifierOption> = []
-                                        if let options = data.modifierOptions{
-                                            if options.count>0{
-                                                for option in options{ // options
+                if groupData.count>0{
+                    
+                    for (_,data) in groupData.enumerated(){ //
+                        var modifierOption: Array<ModifierOption> = []
+                        if let options = data.modifierOptions{
+                            if options.count>0{
+                                for option in options{ // modifier subitem options
                                                     
-                                                    modifierOption.append(ModifierOption(productID: modifierList.ProductID!, modifierID: data.modifierID!, modifierOptionID: option.optionID!, optionName: option.optionName!, cost: option.price!,selected:option.selected!,noCost:option.noCost!))
+                                    modifierOption.append(ModifierOption(productID: modifierList.ProductID!, modifierID: data.modifierID!, modifierOptionID: option.optionID!, optionName: option.optionName!, cost: option.price!,selected:option.selected!,noCost:option.noCost!))
                                                     
                                                     //print(option.optionName!)
-                                                }
-                                            }
-                                        }
-                                        let modifierItem = ModifierItem(productID: modifierList.ProductID!, modifierID: data.modifierID!, modifierName: data.modifierName!, price: modifierList.Price!, itemTotalPrice: 0.0, quantity: 1, notes: "",
-                                                                        selectionType:data.selectionType!,
-                                                                        viewType:data.viewType!,showTitle:data.showTitle!)
-                                        self.modifiers.append(Modifier(modifierItem:modifierItem, option: modifierOption))
-                                        
-                                        if let modifierCellObj = ModifierFactory.getModifierFactory(data.modifierName!,option: modifierOption, modifierItem:modifierItem, viewType: data.viewType!, selectionType: data.selectionType!, titleShow:data.showTitle!){
-                                            
-                                            self.items.append(modifierCellObj)
-                                        }
-                                        
-                                    }
-                                    
-                                    self.mDelegate?.refreshData(modifierData.defaultPrice!, quantity:modifierData.defaultQuantity! ,modifiers: self.modifiers, showPageTitle:modifierData.titleVisible!)
-                                    
                                 }
                             }
-                            //print(modifierData.modifierGroupTitle!)
                         }
+                        let modifierItem = ModifierItem(productID: modifierList.ProductID!, modifierID: data.modifierID!, modifierName: data.modifierName!, price: modifierList.Price!, itemTotalPrice: 0.0, quantity: 1, notes: "",selectionType:data.selectionType!,viewType:data.viewType!,showTitle:data.showTitle!)
+                        self.modifiers.append(Modifier(modifierItem:modifierItem, option: modifierOption))
+                                        
+                        if let modifierCellObj = ModifierFactory.getModifierFactory(data.modifierName!,option: modifierOption, modifierItem:modifierItem, viewType: data.viewType!, selectionType: data.selectionType!, titleShow:data.showTitle!){
+                                            
+                                self.items.append(modifierCellObj)
+                        }
+                                        
                     }
+                                    
+                    self.mDelegate?.refreshData(modifierData.defaultPrice!, quantity:modifierData.defaultQuantity! ,modifiers: self.modifiers, showPageTitle:modifierData.titleVisible!)
+                                    
                 }
+                
             }
         }
         
@@ -160,6 +155,182 @@ class ModifierViewModel : NSObject{
 
 }
 
+extension ModifierViewModel{
+    
+    // add all selected modifiers to the product list & return modified long description
+    func addAllModifiers(modifierName:String)->String{
+        
+        var modifierFullName = modifierName
+        if self.isAnyItemSelected(){
+            
+            modifierFullName = ""
+
+            for (index,_) in self.modifiers.enumerated(){
+                
+                for (_, option) in self.modifiers[index].option!.enumerated()  {
+                    
+                    
+                    if option.selected! {
+                        modifierFullName = modifierFullName.isEmpty ? option.optionName! : (modifierFullName + " , " + option.optionName!)
+                    }
+                    
+                }
+                
+            }
+            
+            //self.modifierDelegate?.modifyProduct(self.modifierFixedPrice, productID: self.productID ?? "", itemCount: self.itemCount, name: self.productName!, notes: self.specialNotes.text ?? "",productItem: self.getUpdatedProductItemByID(self.productID!, productItem: self.productItem!, quantity: self.itemCount, price: self.modifierFixedPrice, modifierFullName: self.modifierFullName,itemTotal:self.modifierTotalPrice) , modifierFullName:self.modifierFullName,itemTotal:self.modifierTotalPrice)
+        }
+        
+        return modifierFullName
+        
+        //
+    }
+
+    // update the changed state(selected/unselected) of modifier object
+     func editModifiers(_ state: Bool,modifierItem: ModifierItem,option: ModifierOption,isSingleSelection:Bool)->Double?{
+        
+        var totalPrice: Double?
+        if self.modifiers.count>0{
+            if self.updateItemByID(option, mID: modifierItem.modifierID!, isSelected: state, isSingleSelection:isSingleSelection){
+                
+                totalPrice =  self.calculateTotalPrice()
+            }
+            
+        }
+        return totalPrice
+    }
+    
+    // all selected items price calculator
+    func calculateTotalPrice()->Double{
+        
+        var total = 0.0
+        for (_, item) in self.modifiers.enumerated(){
+            for(_, option) in item.option!.enumerated(){
+                if option.selected!{
+                    total = total + option.cost!
+                }
+            }
+        }
+        return total
+    }
+    
+    func findModifierByID(_ modifier:Array<Modifier>, mID:Double)->(index:Int, options: Array<ModifierOption>)?{
+        
+        var modifierOption: Array<ModifierOption>? = []
+        
+        for (index, item) in modifier.enumerated(){
+            if item.modifierItem?.modifierID == mID{
+                
+                for(_, option) in item.option!.enumerated(){
+                    modifierOption?.append(option)
+                }
+                return (index,modifierOption!)
+            }
+        }
+        return nil
+    }
+    
+    func findOptionByID(_ option:Array<ModifierOption>, oID:Double)->(index:Int, status:Bool){
+        
+        for (index, item) in option.enumerated(){
+            if item.modifierOptionID == oID{
+                return (index, true)
+            }
+        }
+        return (-1, false)
+    }
+    
+    func updateItemByID(_ option: ModifierOption, mID:Double, isSelected:Bool, isSingleSelection:Bool)->Bool{
+        
+        if let optionItems = self.findModifierByID(self.modifiers, mID:mID){ // if modifier item exists
+            
+            let optionFinder = self.findOptionByID(optionItems.options, oID: option.modifierOptionID!)
+            if let modifyOption = self.modifiers[optionItems.index].option{
+                
+                modifyOption[optionFinder.index].selected = isSelected
+                
+                if isSingleSelection{
+                    for (optIndex, opt) in modifyOption.enumerated(){
+                        if optIndex != optionFinder.index{
+                            opt.selected = false
+                        }
+                    }
+                }
+                return true
+            }
+            
+        }
+        return false
+    }
+    
+    //item with modifiers is added to product list & return the new product object
+    func getUpdatedProductItemByID(_ id:String,productItem: Array<Product>, quantity:Int, price:Double, modifierFullName:String,itemTotal:Double)->Array<Product>{
+        
+        let prodArr = productItem
+        for product in prodArr{
+            
+            if product.ProductID==id{
+                product.ItemCount = quantity
+                product.Price = price
+                product.ItemTotalPrice = itemTotal
+                product.modifierFullName = modifierFullName
+            }
+        }
+        return prodArr
+    }
+    
+    
+    fileprivate func isAnyItemSelected()->Bool{
+        
+        for (index,_) in self.modifiers.enumerated(){
+            for (_, option) in self.modifiers[index].option!.enumerated()   {
+                if option.selected!{
+                    return option.selected!
+                }
+            }
+        }
+        return false
+    }
+    
+    func addItemByID(_ modifier:Array<Modifier>, option: ModifierOption, mID:Double, isSelected:Bool)->Bool{
+        
+        if let optionItems = self.findModifierByID(modifier, mID:mID){ // if modifier item exists
+            let optionFinder = self.findOptionByID(optionItems.options, oID: option.modifierOptionID!)
+            
+            modifier[optionItems.index].option?.append(option)
+            
+            return true
+            
+        }
+        return false
+    }
+    
+    func removeItemByID(_ modifier:Array<Modifier>, option: ModifierOption, mID:Double)->(modifierItemIndex:Int,status:Bool){
+        
+        if let optionItems = self.findModifierByID(modifier, mID:mID){ // if modifier item exists
+            let optionFinder = self.findOptionByID(optionItems.options, oID: option.modifierOptionID!)
+            if optionFinder.status{ // if modifier option added already
+                
+                modifier[optionItems.index].option?.remove(at: optionFinder.index)
+                
+                return (optionItems.index,status:true)
+            }
+        }
+        return (-1,status:false)
+    }
+    
+    func emptyModifierByID(_ mID:Double){
+        
+        for (_, item) in self.modifiers.enumerated(){
+            if item.modifierItem?.modifierID == mID{
+                for(optionIndex, _) in item.option!.enumerated(){
+                    item.option?.remove(at: optionIndex)
+                }
+            }
+        }
+    }
+    
+}
 
 extension ModifierViewModel: UITableViewDataSource, UITableViewDelegate, CellSelectionDelegate,CellSingleSelectionDelegate{
     
@@ -189,7 +360,6 @@ extension ModifierViewModel: UITableViewDataSource, UITableViewDelegate, CellSel
             cell.selectedOption.option = item.modifierOption[indexPath.row]
             cell.selectedOption.viewType = item.type.rawValue
             cell.selectedOption.isSelected = !item.modifierOption[indexPath.row].selected!
-            //cell.selectedOption.onSelectChange()
             self.mDelegate?.itemSelected(cell.selectedOption.isSelected, modifierItem:item.modifierItem, option: item.modifierOption[indexPath.row], type:item.type.rawValue)
             
         case .ComponentViewMultiSelectionType:
@@ -291,7 +461,7 @@ extension ModifierViewModel: UITableViewDataSource, UITableViewDelegate, CellSel
 //            break
         
         }
-        return UITableViewCell()
+        //return UITableViewCell()
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -317,8 +487,6 @@ extension ModifierViewModel: UITableViewDataSource, UITableViewDelegate, CellSel
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        //        let headerView = UIView(frame: CGRect(x: 20, y: 0, width: tableView.frame.width, height: 50))
-        //headerView.backgroundColor = UIColor.whiteColor()
         
         let title = CustomLabel()
         if items[section].showTitle{
@@ -337,7 +505,7 @@ extension ModifierViewModel: UITableViewDataSource, UITableViewDelegate, CellSel
     
 }
 
-class ModifierFactory{ // returns the desired factory cell object based on viewType  & selecttionType
+class ModifierFactory{ // returns factory cell object based on viewType  & selecttionType
     
     static func getModifierFactory(_ name:String,option:Array<ModifierOption>, modifierItem:ModifierItem, viewType:String, selectionType:String, titleShow:Bool)->ModifierViewModelItem?{
         
@@ -367,7 +535,7 @@ class ModifierFactory{ // returns the desired factory cell object based on viewT
     }
 }
 
-class FullViewSingleSelection: ModifierViewModelItem{ // dynamic cell item
+class FullViewSingleSelection: ModifierViewModelItem{ // dynamic cell model for single selection
     
     var name:String?
     var option: Array<ModifierOption>?
@@ -405,7 +573,7 @@ class FullViewSingleSelection: ModifierViewModelItem{ // dynamic cell item
         self.modifiersItem = modifierItem
     }
 }
-class FullViewMultipleSelection: ModifierViewModelItem{
+class FullViewMultipleSelection: ModifierViewModelItem{ // dynamic cell model for multiple selection
     
     var name:String?
     var option: Array<ModifierOption>?
@@ -444,7 +612,7 @@ class FullViewMultipleSelection: ModifierViewModelItem{
         self.modifiersItem = modifierItem
     }
 }
-class ComponentViewMultipleSelection: ModifierViewModelItem{
+class ComponentViewMultipleSelection: ModifierViewModelItem{ // dynamic cell model for component view multiple selection
     
     var name:String?
     var option: Array<ModifierOption>?
@@ -483,7 +651,8 @@ class ComponentViewMultipleSelection: ModifierViewModelItem{
         self.modifiersItem = modifierItem
     }
 }
-class ComponentViewSingleSelection: ModifierViewModelItem{
+class ComponentViewSingleSelection: ModifierViewModelItem{//dynamic cell model for component view single selection
+    
     var name:String?
     var option: Array<ModifierOption>?
     var modifiersItem: ModifierItem?

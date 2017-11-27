@@ -38,7 +38,7 @@ class DownStateButton : UIButton {
         
         super.init(coder: coder)!
         //self.setRadioImage(self)
-        self.addTarget(self, action: "onTouchUpInside:", for: UIControlEvents.touchUpInside)
+        self.addTarget(self, action: #selector(DownStateButton.onTouchUpInside(_:)), for: UIControlEvents.touchUpInside)
         
     }
 
@@ -52,7 +52,7 @@ class DownStateButton : UIButton {
     
     func setTitleText(_ titleStr: String){
         
-        var titleText = UILabel()
+        let titleText = UILabel()
         titleText.frame = CGRect(x: 10, y: self.frame.size.height/4, width: self.frame.size.width * 0.8, height: self.frame.size.height/2)
         titleText.text = titleStr
         titleText.font = UIFont(name: "Helvetica", size: 12)
