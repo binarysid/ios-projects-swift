@@ -40,11 +40,12 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
         self.tableView.rowHeight = 57
     }
     
-    
+    // assign to multi selection delegate
     func attachMuiltiItemDelegate(_ delegate:ModifierItemDelegate){
         self.modifierDelegate = delegate
     }
     
+    // assign to single selection delegate
     func attachSingleItemDelegate(_ delegate:ModifierSingleItemDelegate){
         self.modifierSingleItemDelegate = delegate
     }
@@ -75,27 +76,27 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
             switch viewSelectionType{
                 
         case .ComponentViewSingleSelectionType:
-        let cell : FullViewSingleSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewSingleSelectionCell.identifier, for: indexPath) as! FullViewSingleSelectionCell
-        cell.selectedOption.isSelected = !cell.selectedOption.isSelected
+            let cell : FullViewSingleSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewSingleSelectionCell.identifier, for: indexPath) as! FullViewSingleSelectionCell
+            cell.selectedOption.isSelected = !cell.selectedOption.isSelected
 
-        if let modifierOption = self.option{
-            modifierOption[indexPath.row].selected = cell.selectedOption.isSelected
-            self.modifierSingleItemDelegate?.singleOptionSelected(cell.selectedOption.isSelected, modifierItem: modifierItem!, option: modifierOption[indexPath.row], type: self.viewType!.rawValue, isSingleSelection: true)
+            if let modifierOption = self.option{
+                modifierOption[indexPath.row].selected = cell.selectedOption.isSelected
+                self.modifierSingleItemDelegate?.singleOptionSelected(cell.selectedOption.isSelected, modifierItem: modifierItem!, option: modifierOption[indexPath.row], type: self.viewType!.rawValue, isSingleSelection: true)
 
-        }
+            }
          
         case .ComponentViewMultiSelectionType:
-        let cell : FullViewMultiSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
-        cell.selectedOption.modifierItem = modifierItem
+            let cell : FullViewMultiSelectionCell = tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
+            cell.selectedOption.modifierItem = modifierItem
         
-        cell.selectedOption.viewType = self.viewType!.rawValue
-        if let modifierOption = self.option{
-            cell.selectedOption.option = modifierOption[indexPath.row]
-            cell.selectedOption.isSelected = !modifierOption[indexPath.row].selected!
-            modifierOption[indexPath.row].selected = cell.selectedOption.isSelected
-            self.modifierDelegate!.optionSelected(cell.selectedOption.isSelected, modifierItem:self.modifierItem!, option: modifierOption[indexPath.row], type:self.viewType!.rawValue,isSingleSelection:false)
+            cell.selectedOption.viewType = self.viewType!.rawValue
+            if let modifierOption = self.option{
+                cell.selectedOption.option = modifierOption[indexPath.row]
+                cell.selectedOption.isSelected = !modifierOption[indexPath.row].selected!
+                modifierOption[indexPath.row].selected = cell.selectedOption.isSelected
+                self.modifierDelegate!.optionSelected(cell.selectedOption.isSelected, modifierItem:self.modifierItem!, option: modifierOption[indexPath.row], type:self.viewType!.rawValue,isSingleSelection:false)
             
-        }
+            }
             default:
                 break
             }
@@ -121,30 +122,32 @@ class ModifierItemVC: UIViewController,UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let viewSelectionType = self.viewType{
+            
             switch viewSelectionType{
+                
             case .ComponentViewMultiSelectionType:
-            let cell : FullViewMultiSelectionCell = self.tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
+                let cell : FullViewMultiSelectionCell = self.tableView.dequeueReusableCell(withIdentifier: FullViewMultiSelectionCell.identifier, for: indexPath) as! FullViewMultiSelectionCell
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
             
-            if let modifierOption = self.option{
+                if let modifierOption = self.option{
             
-                cell.modifierName.text = modifierOption[indexPath.row].optionName
-                if !modifierOption[indexPath.row].noCost!{
+                    cell.modifierName.text = modifierOption[indexPath.row].optionName
+                    if !modifierOption[indexPath.row].noCost!{
                     //cell.price.text = "+" + Resources.sharedInstance.currency + modifierOption[indexPath.row].cost!.roundToPlaces(2).twoDigitString()
+                    }
+                    else{
+                        cell.price.text = ""
+                    }
+                
+                    cell.selectedOption.isSelected = modifierOption[indexPath.row].selected!
+                    cell.cellDelegate = self
+                    cell.selectedOption.modifierItem = self.modifierItem
+                    cell.selectedOption.option = modifierOption[indexPath.row]
+                    cell.selectedOption.viewType = ModifierViewType.FullViewMultiSelectionType.rawValue
+                
+                
                 }
-                else{
-                    cell.price.text = ""
-                }
-                
-                cell.selectedOption.isSelected = modifierOption[indexPath.row].selected!
-                cell.cellDelegate = self
-                cell.selectedOption.modifierItem = self.modifierItem
-                cell.selectedOption.option = modifierOption[indexPath.row]
-                cell.selectedOption.viewType = ModifierViewType.FullViewMultiSelectionType.rawValue
-                
-                
-            }
-            return cell
+                return cell
                 
             case .ComponentViewSingleSelectionType:
                 let cell : FullViewSingleSelectionCell = self.tableView.dequeueReusableCell(withIdentifier: FullViewSingleSelectionCell.identifier, for: indexPath) as! FullViewSingleSelectionCell

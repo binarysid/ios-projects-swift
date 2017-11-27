@@ -166,16 +166,11 @@ extension ModifierViewModel{
             modifierFullName = ""
 
             for (index,_) in self.modifiers.enumerated(){
-                
                 for (_, option) in self.modifiers[index].option!.enumerated()  {
-                    
-                    
                     if option.selected! {
                         modifierFullName = modifierFullName.isEmpty ? option.optionName! : (modifierFullName + " , " + option.optionName!)
                     }
-                    
                 }
-                
             }
             
             //self.modifierDelegate?.modifyProduct(self.modifierFixedPrice, productID: self.productID ?? "", itemCount: self.itemCount, name: self.productName!, notes: self.specialNotes.text ?? "",productItem: self.getUpdatedProductItemByID(self.productID!, productItem: self.productItem!, quantity: self.itemCount, price: self.modifierFixedPrice, modifierFullName: self.modifierFullName,itemTotal:self.modifierTotalPrice) , modifierFullName:self.modifierFullName,itemTotal:self.modifierTotalPrice)
@@ -220,7 +215,6 @@ extension ModifierViewModel{
         
         for (index, item) in modifier.enumerated(){
             if item.modifierItem?.modifierID == mID{
-                
                 for(_, option) in item.option!.enumerated(){
                     modifierOption?.append(option)
                 }
@@ -347,6 +341,7 @@ extension ModifierViewModel: UITableViewDataSource, UITableViewDelegate, CellSel
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let item = items[indexPath.section]
+        
         switch item.type{ // check selected cell type
             
         case .FullViewSingleSelectionType:
