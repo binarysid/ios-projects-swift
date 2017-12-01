@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2CDF768B5410734F78C57DE8 /* Pods_MutilpleTypesCell_MVVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1990082CB0D8886214175731 /* Pods_MutilpleTypesCell_MVVM.framework */; };
 		D0654DE61FC15D5D0044B8FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0654DE51FC15D5D0044B8FF /* AppDelegate.swift */; };
 		D0654DEE1FC15D5D0044B8FF /* MutilpleTypesCell_MVVM.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D0654DEC1FC15D5D0044B8FF /* MutilpleTypesCell_MVVM.xcdatamodeld */; };
 		D0654DF01FC15D5E0044B8FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0654DEF1FC15D5E0044B8FF /* Assets.xcassets */; };
@@ -48,9 +47,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1990082CB0D8886214175731 /* Pods_MutilpleTypesCell_MVVM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MutilpleTypesCell_MVVM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6144BC298CF7EF2A128664B4 /* Pods-MutilpleTypesCell-MVVM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MutilpleTypesCell-MVVM.release.xcconfig"; path = "Pods/Target Support Files/Pods-MutilpleTypesCell-MVVM/Pods-MutilpleTypesCell-MVVM.release.xcconfig"; sourceTree = "<group>"; };
-		BFD80E8638FBC38F71DEB358 /* Pods-MutilpleTypesCell-MVVM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MutilpleTypesCell-MVVM.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MutilpleTypesCell-MVVM/Pods-MutilpleTypesCell-MVVM.debug.xcconfig"; sourceTree = "<group>"; };
 		D0654DE21FC15D5D0044B8FF /* MutilpleTypesCell-MVVM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MutilpleTypesCell-MVVM.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0654DE51FC15D5D0044B8FF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0654DED1FC15D5D0044B8FF /* MutilpleTypesCell_MVVM.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MutilpleTypesCell_MVVM.xcdatamodel; sourceTree = "<group>"; };
@@ -97,37 +93,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CDF768B5410734F78C57DE8 /* Pods_MutilpleTypesCell_MVVM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3E737CEAC8EAA8B8FC0A8C06 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				BFD80E8638FBC38F71DEB358 /* Pods-MutilpleTypesCell-MVVM.debug.xcconfig */,
-				6144BC298CF7EF2A128664B4 /* Pods-MutilpleTypesCell-MVVM.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		7CDE8E17A43307F3DB220FBC /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				1990082CB0D8886214175731 /* Pods_MutilpleTypesCell_MVVM.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		D0654DD91FC15D5D0044B8FF = {
 			isa = PBXGroup;
 			children = (
 				D0654DE41FC15D5D0044B8FF /* MutilpleTypesCell-MVVM */,
 				D0654DE31FC15D5D0044B8FF /* Products */,
-				3E737CEAC8EAA8B8FC0A8C06 /* Pods */,
-				7CDE8E17A43307F3DB220FBC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -319,12 +295,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D0654DF71FC15D5E0044B8FF /* Build configuration list for PBXNativeTarget "MutilpleTypesCell-MVVM" */;
 			buildPhases = (
-				53017E5D820E0856BAC2B2B8 /* [CP] Check Pods Manifest.lock */,
 				D0654DDE1FC15D5D0044B8FF /* Sources */,
 				D0654DDF1FC15D5D0044B8FF /* Frameworks */,
 				D0654DE01FC15D5D0044B8FF /* Resources */,
-				6A17FE02010E4D6A7D3BDCB1 /* [CP] Embed Pods Frameworks */,
-				C876576D59CFC899C5151429 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -392,64 +365,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		53017E5D820E0856BAC2B2B8 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MutilpleTypesCell-MVVM-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6A17FE02010E4D6A7D3BDCB1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MutilpleTypesCell-MVVM/Pods-MutilpleTypesCell-MVVM-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireObjectMapper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MutilpleTypesCell-MVVM/Pods-MutilpleTypesCell-MVVM-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C876576D59CFC899C5151429 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MutilpleTypesCell-MVVM/Pods-MutilpleTypesCell-MVVM-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D0654DDE1FC15D5D0044B8FF /* Sources */ = {
@@ -593,7 +508,6 @@
 		};
 		D0654DF81FC15D5E0044B8FF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BFD80E8638FBC38F71DEB358 /* Pods-MutilpleTypesCell-MVVM.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8N97M923LL;
@@ -607,7 +521,6 @@
 		};
 		D0654DF91FC15D5E0044B8FF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6144BC298CF7EF2A128664B4 /* Pods-MutilpleTypesCell-MVVM.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8N97M923LL;
